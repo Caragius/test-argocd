@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: demo-app
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: app
+
+  source:
+    repoURL: https://github.com/Caragius/test-argocd
+    targetRevision: master
+    path: ops-tools/helm/app
+  
+    helm:
+      parameters: 
+      - name: "replicaCount"
+        value: "2"
+  
+
+  # Destination cluster and namespace to deploy the application
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: demo
+
+  # Sync policy
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
