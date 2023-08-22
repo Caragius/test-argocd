@@ -1,0 +1,29 @@
+FROM golang:1.17.0-alpine as builder
+
+WORKDIR /go/src/app
+
+COPY main.go go.mod ./
+
+RUN apk update && apk add --no-cache git
+RUN go install github.com/go-delve/delve/cmd/dlv@master
+
+RUN go mod download && \
+    go mod verify 
+
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o /go/bin/main
+
+FROM alpine
+
+EXPOSE 9001 40000
+
+WORKDIR /
+
+ENV DEBUG=0
+
+COPY --from=builder /go/bin/dlv /
+COPY --from=builder /go/bin/main /
+COPY start.sh /
+#RUN apk add --no-cache libc6-compat
+RUN chmod +x /start.sh
+
+CMD [ "/start.sh" ]

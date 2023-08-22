@@ -1,0 +1,52 @@
+
+ARG USER=neoflex
+
+FROM golang:1.17.0-alpine as user
+
+ARG USER
+ENV USER=$USER UID=10001
+
+RUN adduser \
+--disabled-password \
+--gecos "" \
+--home "/nonexistent" \
+--shell "/sbin/nologin" \
+--no-create-home \
+--uid "${UID}" \
+"${USER}"
+
+
+FROM golang:1.17.0-alpine as builder
+
+WORKDIR /go/src/app
+
+ADD main.go go.mod ./
+
+RUN apk update && \
+    apk add --no-cache git && \
+    go mod download && \
+    go mod verify 
+
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o /go/bin/main
+
+FROM alpine as app
+
+COPY --from=user /etc/passwd /etc/passwd
+COPY --from=user /etc/group /etc/group
+
+ARG USER
+ENV USER=$USER
+USER $USER:$USER
+
+EXPOSE 9001
+
+ADD ./static /static/
+
+COPY --from=builder /go/bin/main /
+
+#RUN apk add --no-cache libc6-compat
+
+ENTRYPOINT [ "/main" ]
+
+
+
