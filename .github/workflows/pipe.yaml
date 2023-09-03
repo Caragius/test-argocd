@@ -30,8 +30,11 @@ jobs:
       - name: Get version
         id: getver
         run: |
+          git fetch --tags
+          TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
+          echo "Latest tag: $TAG"
           DATE=$(date +'%d-%m-%y')
-          echo "GIT_VER=$(git describe --match "v*"  --abbrev=4 --tags --always `git rev-list --tags --max-count=1`)-$GITHUB_RUN_NUMBER-$DATE" >> $GITHUB_ENV
+          echo "GIT_VER=$TAG-$(git describe --match "v*"  --abbrev=4 --tags --always `git rev-list --tags --max-count=1`)-$GITHUB_RUN_NUMBER-$DATE" >> $GITHUB_ENV
       - name: echo
         run: | 
               echo $GIT_VER
@@ -39,8 +42,8 @@ jobs:
       - name: Get latest tag
         run: |
             git fetch --tags
-            latest_tag=$(git describe --tags `git rev-list --tags --max-count=1`)
-            echo "Latest tag: $latest_tag"
+            TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
+            echo "Latest tag: $TAG"
             
     outputs:
           GIT_VER: ${{ env.GIT_VER }}
