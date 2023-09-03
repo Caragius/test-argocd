@@ -21,11 +21,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+        
+      - name: Get latest tag
+        id: latest_tag
+        run: echo "::set-output name=tag::$(git describe --abbrev=0 --tags)"
+
+       
       - name: Get version
         id: getver
         run: |
           DATE=$(date +'%d-%m-%y')
           echo "GIT_VER=$(git describe --match "v*" --abbrev=4 --tags --always)-$GITHUB_RUN_NUMBER-$DATE" >> $GITHUB_ENV
+      - name: echo
+        run: | 
+              echo $GIT_VER
             
     outputs:
           GIT_VER: ${{ env.GIT_VER }}
