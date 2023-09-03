@@ -60,7 +60,6 @@ jobs:
     - name: install yq
       uses: mikefarah/yq@v4.15.1
 
-
     - name: update infra yaml file
       run: |
         cd ops-tools/helm/app
