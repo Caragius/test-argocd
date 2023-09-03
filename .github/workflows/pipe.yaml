@@ -64,7 +64,8 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git commit -m "Update Docker image tag to latest"
-        git push origin/master
+        git status
+        cat ops-tools/helm/app/values.yaml
     # - name: Deploy
     #   uses: okar1/yc-helm@master
     #   with:
