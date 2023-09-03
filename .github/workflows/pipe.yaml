@@ -1,0 +1,73 @@
+name: Docker and Helm Build and Push
+
+
+on:
+  push:
+    branches:
+      - master
+
+# env:
+#   CR_REGISTRY: crpfe65tgiohcnakbtfh
+#   CR_REPO: prj-manager
+  
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    #environment: dev
+    steps:
+
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+    #   - name: Login in Yandex Cloud
+    #     uses: yc-actions/yc-cr-login@v0.1-alpha
+    #     with:
+    #       yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+
+
+      - name: Get version
+        id: getver
+        run: |
+          DATE=$(date +'%d-%m-%y')
+          echo "GIT_VER=$(git describe --match "v*" --abbrev=4 --tags --always)-$GITHUB_RUN_NUMBER-$DATE" >> $GITHUB_ENV
+
+        
+    #   - name: Build and push
+    #     uses: docker/build-push-action@v4
+    #     with:
+    #       push: true
+    #       file: ./compose/Dockerfile
+    #       context: .
+    #       tags: cr.yandex/${{ env.CR_REGISTRY }}/${{ env.CR_REPO }}:${{ env.GIT_VER }} 
+            
+    outputs:
+          GIT_VER: ${{ env.GIT_VER }}
+
+  helm-deploy:
+    runs-on: ubuntu-latest
+    needs:  [build-and-push]
+    #environment: dev
+    env:
+      GIT_VER: ${{ needs.build-and-push.outputs.GIT_VER }}
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: Deploy
+      run: |
+        cd ops-tools/helm/app
+        sed -i 's/imageTag: .*/imageTag: ${{ env.GIT_VER }}/' values.yaml
+        git add values.yaml
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git commit -m "Update Docker image tag to latest"
+        git push
+    # - name: Deploy
+    #   uses: okar1/yc-helm@master
+    #   with:
+    #     SA_KEY: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
+    #     K8S_CLUSTER_ID: catr6ctchebm3k7lpsfg
+    #     HELM_ARGS: upgrade --install -n=prj-manager django ./ops-tools/helm/django --set image.repository=cr.yandex/${{ env.CR_REGISTRY }}/${{ env.CR_REPO }},image.tag=${{ env.GIT_VER }}

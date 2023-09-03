@@ -13,10 +13,10 @@ spec:
     targetRevision: master
     path: ops-tools/helm/app
   
-    helm:
-      parameters: 
-      - name: "replicaCount"
-        value: "2"
+    # helm:
+    #   parameters: 
+    #   - name: "replicaCount"
+    #     value: "2"
   
 
   # Destination cluster and namespace to deploy the application
