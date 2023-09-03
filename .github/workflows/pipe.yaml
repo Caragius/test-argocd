@@ -31,8 +31,7 @@ jobs:
         id: getver
         run: |
           DATE=$(date +'%d-%m-%y')
-          git fetch --tags
-          echo "GIT_VER=$(git describe --match "v*" --abbrev=4 --tags --always)-$GITHUB_RUN_NUMBER-$DATE" >> $GITHUB_ENV
+          echo "GIT_VER=$(git describe --match "v*"  --abbrev=4 --tags --always `git rev-list --tags --max-count=1`)-$GITHUB_RUN_NUMBER-$DATE" >> $GITHUB_ENV
       - name: echo
         run: | 
               echo $GIT_VER
