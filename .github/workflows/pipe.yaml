@@ -60,7 +60,7 @@ jobs:
       run: |
         cd ops-tools/helm/app
         sed -i 's/imageTag: .*/imageTag: latest/' values.yaml
-        cat ops-tools/helm/app/values.yaml
+        cat values.yaml
     # - name: Deploy
     #   uses: okar1/yc-helm@master
     #   with:
