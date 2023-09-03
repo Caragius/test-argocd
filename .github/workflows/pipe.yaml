@@ -60,11 +60,6 @@ jobs:
       run: |
         cd ops-tools/helm/app
         sed -i 's/imageTag: .*/imageTag: latest/' values.yaml
-        git add values.yaml
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git commit -m "Update Docker image tag to latest"
-        git status
         cat ops-tools/helm/app/values.yaml
     # - name: Deploy
     #   uses: okar1/yc-helm@master
