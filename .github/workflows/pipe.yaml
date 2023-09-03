@@ -64,7 +64,7 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
         git commit -m "Update Docker image tag to latest"
-        git push
+        git push origin/master
     # - name: Deploy
     #   uses: okar1/yc-helm@master
     #   with:
