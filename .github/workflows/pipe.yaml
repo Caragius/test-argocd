@@ -64,7 +64,7 @@ jobs:
     - name: update infra yaml file
       run: |
         cd ops-tools/helm/app
-        yq e -i 'image.tag=latest' values.yaml
+        yq e -i '.image.tag="latest"' values.yaml
         cat  values.yaml
 
     # - name: Deploy
