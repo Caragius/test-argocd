@@ -7,7 +7,7 @@ image:
   repository: docker.io/library/myapp
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "9c95-15-03-09-23"
+  tag: "afe1-16-03-09-23"
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
