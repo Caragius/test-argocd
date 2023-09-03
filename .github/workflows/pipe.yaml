@@ -64,13 +64,13 @@ jobs:
     - name: update infra yaml file
       run: |
         cd ops-tools/helm/app
-        yq e -i '.image.tag="latest"' values.yaml
+        yq e -i '.image.tag="${{ env.GIT_VER }}"' values.yaml
         cat  values.yaml
     
     - uses: stefanzweifel/git-auto-commit-action@v4
       with:
           commit_message: Apply php-cs-fixer changes
-          token: ${{ github.token }}
+          #token: ${{ github.token }}
 
 
     # - name: Deploy
