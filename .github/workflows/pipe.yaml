@@ -21,26 +21,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-    #   - name: Login in Yandex Cloud
-    #     uses: yc-actions/yc-cr-login@v0.1-alpha
-    #     with:
-    #       yc-sa-json-credentials: ${{ secrets.YC_SA_JSON_CREDENTIALS }}
-
-
       - name: Get version
         id: getver
         run: |
           DATE=$(date +'%d-%m-%y')
           echo "GIT_VER=$(git describe --match "v*" --abbrev=4 --tags --always)-$GITHUB_RUN_NUMBER-$DATE" >> $GITHUB_ENV
-
-        
-    #   - name: Build and push
-    #     uses: docker/build-push-action@v4
-    #     with:
-    #       push: true
-    #       file: ./compose/Dockerfile
-    #       context: .
-    #       tags: cr.yandex/${{ env.CR_REGISTRY }}/${{ env.CR_REPO }}:${{ env.GIT_VER }} 
             
     outputs:
           GIT_VER: ${{ env.GIT_VER }}
