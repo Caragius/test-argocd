@@ -307,13 +307,13 @@ metadata:
   name: kubernetes-dashboard-ingress
   namespace: kubernetes-dashboard
   annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-staging"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   ingressClassName: traefik
   tls:
   - hosts:
     - dashboard.te4gh0st.online
-    secretName: app-tls
+    secretName: dashboard-tls
   rules:
   - host: dashboard.te4gh0st.online
     http:
