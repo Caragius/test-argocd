@@ -310,6 +310,10 @@ metadata:
     cert-manager.io/cluster-issuer: "letsencrypt-staging"
 spec:
   ingressClassName: traefik
+  tls:
+  - hosts:
+    - dashboard.te4gh0st.online
+    secretName: app-tls
   rules:
   - host: dashboard.te4gh0st.online
     http:
